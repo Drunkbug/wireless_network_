@@ -34,27 +34,44 @@ def generate_received_sequence(noise_sequence):
     """
     return [ 1 if n > 0 else 0 for n in noise_sequence ]
 
-def initialize_scheme():
+def get_bit_error_rate(sent_sequence, received_sequence, size):
+    """ calculate bit error rate in the normal way
+
+    Args:
+        send_sequence: An arrary for the sequence number been sent
+        received_sequence: An arrary for the sequence number been received
+    """
+    acc = 0
+    for s, r in zip(sent_sequence, received_sequence):
+        if s == r:
+            acc += 1
+
+    ber = acc / size
+    return ber
+
+def initialize_scheme(size):
     #TODO add bit rate
     """ initialize scheme with bit rate
     Generates 10 million bits random 0s and 1s with given bit rate
     Then map 0 to -1 and 1 to +1
 
     Args:
+        size: An integer for the size of the sequence
         bit_rate: A number represents bit rate 
     """
     # generate binary sequency with bit rate 1/2
-    binary_sequence = [randint(0,1) for i in range(1000000)]
+    binary_sequence = [randint(0,1) for i in range(size)]
     # generate antipodal signaling shceme
     signal_scheme = [ (b - 1) if b == 0 else b for b in binary_sequence ]
     return signal_scheme
 
 
 if __name__ == "__main__":
-
-    signal_scheme = initialize_scheme()
+    size = 1000000
+    sent_sequence = initialize_scheme(size)
     noise = generate_noise_array(0, 3)
-    noise_sequence = generate_noise_sequence(signal_scheme, noise) 
+    noise_sequence = generate_noise_sequence(sent_sequence, noise) 
     received_sequence = generate_received_sequence(noise_sequence)
-    print (received_sequence)
+    ber = get_bit_error_rate(sent_sequence, received_sequence, size)
+    print (ber)
     
