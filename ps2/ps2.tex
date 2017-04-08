@@ -1,0 +1,162 @@
+\documentclass{article} 
+	\author{Leyi Qiang}
+	\title{Problem Set 2}
+\begin{document} 
+	\section{Part 1: IEEE 802.11 MAC (10 points)}
+	An Ad Hoc network using IEEE802.11 has 4 nodes: N1, N2, N3, N4. Assume that SIFS is 1 unit of time, PIFS 2 units of time, DIFS 3 units of time, and slot time is 2 (these value are not the real values but are taken to simplify the packets scheduling).
+
+Assume that at the beginning the channel is idle (no transmission), and that at instant 1, N2 has a packet to be sent to N4. At instant 2, both N1 and N3 have a packet to be sent to N4. Assume that the random number generator (for backoff) will give the following values for N1: 2, 5, ... and for N2: 4, 3, … and for N3: 1, 4, ... Assume that we don’t use RTS/CTS nor fragmentation, and that all data packets have the same length: 6 units of time and that the Ack packet has length 3 units of time. Furthermore the channel Bit Error Rate is assumed to be 0. Show the execution of the DCF mode of IEEE802.11. \\ 
+
+
+ \begin{center}
+	\begin{tabular}{|p{1cm}|p{10cm}|}
+		\hline
+		Instant & event \\
+		\hline
+		1 & N2 sense the medium is free and wait for DIFS time \\
+		\hline
+    2 &  N1 and N3 sense the medium is free and wait for DIFS time \\
+		\hline
+    4 & N2 starts transmit the packet; N1 and N3 sense the medium is busy, they get the back-off time, which is 4 for N1(2*2) and 2 for N3(2*1). \\
+		\hline
+		10 & N2 finishes packet transmission to N4, N4 waits for SIFS time and then send the ACK \\
+		\hline
+    11 &  N4 sends the ACK \\
+		\hline
+    14 & N2 receives N4’s ACK, N1 and N3 sense the free channel then start to wait for DIFS time \\
+		\hline
+    17 &  N1 and N3 start to wait for back-off time \\
+		\hline
+    19 &  N3’s back-off time finishes first, so N3 starts transmit packet to N4. N1 stop counting back-off time and have 2 residual backoff time \\
+		\hline
+		25 & N3 finishes packet transmission, N4 waits for SIFS time and then send the ACK \\
+		\hline
+		26 & N4 sends the ACK \\
+		\hline
+    29 & N3 receives ACK, N1 starts its residual backoff time \\
+		\hline
+		31 & N1 starts transmit packet to N4 \\
+		\hline
+		37 & N1 finishes transmission \\
+		\hline
+		38 & N4 sends the ACK \\
+		\hline
+	  41 & N1 receives the ACK \\
+		\hline
+	\end{tabular}
+ \end{center}
+
+ \section{Part 2: Text book Problems}
+ 	\subsection{Problem 6.1} For radio transmission in free space signal power is reduced in proportion to the square of
+distance from the source whereas in wire transmission attenuation is a fixed number of Db per
+kilometre. The following table is used to show the Db reduction relative to some reference for
+free space radio and uniform wire. Fill the missing numbers to complete the table.\\
+Radio: \\
+	$L_d = 10log(P_t/P_r) = 20 log(4\pi d/\lambda) = 20log(4\pi/\lambda) + 20log(d)$ \\
+	When d = 1, $20log(4\pi/\lambda) = 6$ \\
+	When d = 2, $L_d = 6 + 20log(2) = 12.021$ \\
+	When d = 4, $L_d = 6 + 20log(4) = 18.041$ \\
+	When d = 8, $L_d = 6 + 20log(8) = 24.062$ \\
+	When d = 16, $L_d = 6 + 20log(16) = 30.082$ \\
+Wired: \\
+	Since it's fixed number of dB per km, it is 3 dB per km(linear) in this example. \\
+
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			Distance(km) & Radio(dB) & Wire(dB) \\
+			\hline
+			1 & -6 & -3 \\
+			\hline
+			2 & -12 & -6 \\
+			\hline
+			4 & -18 & -12 \\
+			\hline
+			8 & -24 & -24 \\
+			\hline
+			16 & -30 & -48 \\
+			\hline
+		\end{tabular}
+	\end{center}
+
+	\subsection{Problem 6.6} Suppose a transmitter produces 50Watts of Power. 
+
+a. Express transmit power in dBm and dBW.
+
+b. If a transmitter’s power is applied to Unity gain Antenna with 900MHz carrier frequency, what is the free space power in dBm at a free space distance of 100m?
+
+c. Repeat (b) for 10Km
+
+d. Repeat (c) for antenna gain 2 \\
+	a) \\ 
+	$N(dBW) = 10log(P2/1W) = 10log(50)dBW = 16.98 dBW$\\
+	$N(dBm) = 10log(P2/1mW) = 10log(50*10^3) = 16.98 + 30 = 46.98dBm$ \\
+	b) \\
+	$P_r = (c^2)/(4πfd)^2$ \\
+  $P_r = (3*10^8)^2 / (4π*(900MHz*10^6)*100m)^2$ \\
+  $P_r =3.52*10^{-6} W $ \\
+  $P_r = 10log(3.52*10^{-6}W/1mW) + 30 = -54.53 + 30 = -24.53 dBm $ \\
+	c) \\
+	$P_r = 3.52 * 10^{-10} W$ \\
+	$P_r = 10log(3.52 * 10^{-10}W/1mW) + 30 = -94.53 + 30 = -64.53dBm$ \\
+	d) \\
+	$P_r = 2*3.52 * 10^{-10}W = 7.04 * 10^{-10} $ \\
+	$P_r = 10log(7.04 * 10^{-10}W/1mW) + 30 = -61.52dBm $ \\
+	\subsection{Problem 6.7}Instead of assuming free space environment in 6.6 assume an urban area cellular radio scenario. Path loss exponent n=3.1 and a transmitter power of 50W. \\
+	a. What is the range of path loss exponent for this environment? \\
+	b. If a transmitter’s power is applied to Unity gain Antenna with 900MHz carrier frequency, what is the free space power in dBm at a free space distance of 100m? \\
+  c. Repeat (b) for a distance of 10km. \\
+	d. Repeat (c) but assume a receiver antenna gain of 2. \\
+	a) 2.7 to 3.5 \\
+	b) \\
+$P_r=(c^2)/(4\pi f)^2*d^{3.1} \\
+P_r= (3*10^8)^2 / (4\pi *(900MHz*10^6))^2 * 100^(3.1) \\
+P_r=4.44*10^{-10} W \\
+P_r = 10log(4.44*10^{-10}W/1mW) + 30 = -63.53 dBm \\
+c) \\
+P_r= (3*10^8)^2 / (4\pi*(900MHz*10^6))^2 * 10000^{3.1} \\
+P_r=2.8*10^{-16} W \\
+P_r = 10log(2.8*10^{-16} W/1mW) + 30 = -125.53 dBm \\
+d) \\
+P_r = 2*2.8*10^{-16} W = 5.6 * 10^{-10} \\
+P_r = 10log(5.6 * 10^{-10}W/1mW) + 30 = -183.03dBm $ \\
+
+
+	\subsection{Problem 6.12}
+	Determine the height of the Antenna for TV stations that must be able to reach customers 80Kms away. Use Okumura-Hatta Model for rural environment with fc=75Mhz and Hr=1.5m. Transmitter power 150Kw and received power must be greater than  $10^{-13}$ W\\
+	$L_{ru} = 10log(150*10^3/10^{-13}) \\
+L_{ru} = 181.76 dbBW \\
+L_{ru} = L_u – 4.78[log(76*10^6)]^2-18.33log(76*10^6) – 40.94 \\
+L_u = L_{ru} + 4.78[log(76*10^6)]^2-18.33log(76*10^6) + 40.94 \\
+L_u = 663.49 \\
+= 69.55 + 26.16log(f) – 13.82logh_b – A(h_m) + (44.9 – 6.55log(h_b))logd
+A(h_m) \\ = (1.1logf – 0.7)h_m – (1.56logf -0.8) \\ = 0.46 
+663.49 \\
+= 69.55 + 26.16log(76*10^6) – 13.82logh_b – A(h_m) + (44.9 – 6.55log(h_b))logd \\
+= 69.55 + 26.16log(76*10^6) – 13.82logh_b – 0.46 + (44.9 – 6.55log(h_b))log(80*10^3) \\
+log(h_b) = -3.66 \\
+h_b = 0.0002 m $ \\
+
+	\subsection{Problem 6.15} Suppose a car is moving through the suburban environment that has a wireless channel with a coherence time of 10ms and the coherence bandwidth of 600Khz. The bitrate of system used is 50kbps. Characterize the channel.a. Is the channel slow or fast fading?b. Is the channel flat or frequency selective fading?
+	a)\\
+$T_b = 1/(50000) = 0.00002s = 0.02ms$ \\
+$ T_c = 10 ms > T_b$, Slow Fading \\
+b)\\
+$B_c  >> B_s$, Flat Fading \\
+
+	\section{Part 3} The goal of this exercise is to compute the BER using some simple assumptions. Consider a binary digital communication at bitrate 50bps. The receiver is mobile and is moving toward the transmitter at speed 10m/s and the communication is over 1500MHZ frequency band.
+What is the value of the frequency of Doppler shift?
+Consider fadings (due to Doppler shift) of the received signal strength R below 0.1∗ρRMS. What is the average fade duration?
+Assume that a bit is lost whenever the received signal strength R of any portion of the bit is below 0.1∗ρRMS. What would the BER of this communication?
+\\
+1. $f_m = v/\lambda = v/(c/f) = vf/c = (10 * 1500*10^6)/(3*10^8)\\
+ = 50Hz \\
+2. \rho = R/R_{rms} = 0.1R_{rms}/R_{rms} = 0.1$ \\
+Use Average fade duration: \\
+$e^{(\rho ^2 - 1)}/\rho f_d\sqrt(2\pi) = 0.01/12.53 = 0.0008s \\
+3.
+N_T = \sqrt2\pi * f_m \rho e^{(- \rho ^2)} = 12.4 \\
+Bit Error Rate = 12/50 = 0.24 $ \\
+
+
+\end{document} 
