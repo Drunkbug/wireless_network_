@@ -1,9 +1,10 @@
 import sys
 import math
 from random import randint
+from scipy import special
 import numpy
 
-#TODO in readme: pip install numpy, use python 3
+#TODO in readme: pip3 install numpy, pip3 install scipy, use python 3
 
 def generate_noise_array(mean, snr, size):
     """ generate noise array based on gaussian noise form 
@@ -58,7 +59,8 @@ def generate_sent_sequence(bit_rate, size):
         bit_rate: A number represents bit rate 
     """
     # generate binary sequency with bit rate 1/2
-    sent_sequence = [randint(0,1) for i in range(size)]
+    sent_sequence = [numpy.random.choice(numpy.arange(0,2), p=[bit_rate, 1 - bit_rate]) for i in range(size)]
+    #sent_sequence = [randint(0,1) for i in range(size)]
     return sent_sequence
 
 
@@ -73,7 +75,7 @@ def initialize_scheme(sent_sequence):
     signal_scheme = [ (b - 1) if b == 0 else b for b in sent_sequence]
     return signal_scheme
 
-def main(snrs, bit_rate, size=1000000, mean=0, bers=[]):
+def main(snrs, bit_rate, size=1000000, mean=0, bers=[], bers2=[]):
     # sent
     sent_sequence = generate_sent_sequence(bit_rate, size)
     signal_scheme = initialize_scheme(sent_sequence)
@@ -85,11 +87,32 @@ def main(snrs, bit_rate, size=1000000, mean=0, bers=[]):
         received_sequence = generate_received_sequence(noise_sequence)
         ber = get_bit_error_rate(sent_sequence, received_sequence, size)
         bers.append(ber)
-
-    print (bers)
+        q = (1/2) * special.erfc((2 * snr)**(1/2) / (2**(1/2)))
+        bers2.append(q)
+    return snrs, bers, bers2
 
 if __name__ == "__main__":
+    # simulate channel under 0.5 bit rate
+    print ("Simulating channel under 0.5 bit rate...")
     snrs = [3, 4, 5, 7,  9, 11]
-    bit_rate = 1/2
-    main(snrs, bit_rate)
-     
+    bit_rate = 0.5
+    snrs, bers, bers2 = main(snrs, bit_rate)
+    results = zip(snrs, bers, bers2)
+    f = open("data_0_5.dat", "w")
+    for r in results:
+        f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
+    f.close()
+    print ("Output: data_0_5.dat")
+    # simulate error rate under 0.01/0.99 bit rate
+    print ("Simulating channel under 0.01 bit rate...")
+    snrs = [3, 4, 5, 7,  9, 11]
+    bit_rate = 0.01
+    snrs, bers, bers2 = main(snrs, bit_rate)
+    results = zip(snrs, bers, bers2)
+    f = open("data_0_01.dat", "w")
+    for r in results:
+        f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
+    f.close()
+    print ("Output: data_0_01.dat")
+    print ("Simulation done.")
+
