@@ -58,9 +58,7 @@ def generate_sent_sequence(bit_rate, size):
         size: A integer indicates how many bits are in the sequence
         bit_rate: A number represents bit rate 
     """
-    # generate binary sequency with bit rate 1/2
     sent_sequence = [numpy.random.choice(numpy.arange(0,2), p=[bit_rate, 1 - bit_rate]) for i in range(size)]
-    #sent_sequence = [randint(0,1) for i in range(size)]
     return sent_sequence
 
 
@@ -75,7 +73,9 @@ def initialize_scheme(sent_sequence):
     signal_scheme = [ (b - 1) if b == 0 else b for b in sent_sequence]
     return signal_scheme
 
-def main(snrs, bit_rate, size=1000000, mean=0, bers=[], bers2=[]):
+def main(snrs, bit_rate, size=1000000, mean=0):
+    bers=[]
+    bers2=[]
     # sent
     sent_sequence = generate_sent_sequence(bit_rate, size)
     signal_scheme = initialize_scheme(sent_sequence)
@@ -95,22 +95,21 @@ if __name__ == "__main__":
     # simulate channel under 0.5 bit rate
     print ("Simulating channel under 0.5 bit rate...")
     snrs = [3, 4, 5, 7,  9, 11]
-    bit_rate = 0.5
-    snrs, bers, bers2 = main(snrs, bit_rate)
+    snrs, bers, bers2 = main(snrs, 0.5)
     results = zip(snrs, bers, bers2)
     f = open("data_0_5.dat", "w")
     for r in results:
+        print (str(r[0]) + " " + str(r[1]))
         f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
     f.close()
     print ("Output: data_0_5.dat")
     # simulate error rate under 0.01/0.99 bit rate
     print ("Simulating channel under 0.01 bit rate...")
-    snrs = [3, 4, 5, 7,  9, 11]
-    bit_rate = 0.01
-    snrs, bers, bers2 = main(snrs, bit_rate)
+    snrs, bers, bers2 = main(snrs, 0.01)
     results = zip(snrs, bers, bers2)
     f = open("data_0_01.dat", "w")
     for r in results:
+        print (str(r[0]) + " " + str(r[1]))
         f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
     f.close()
     print ("Output: data_0_01.dat")
