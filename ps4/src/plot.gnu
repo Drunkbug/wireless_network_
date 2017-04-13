@@ -4,7 +4,7 @@ set output "../data_0_5.png"
 set logscale y 10
 set xlabel "Eb/N0 (dB)"
 set ylabel "Probability of bit error (BER)"
-set style line 1 lc rgb '#0060ad' lt 1 lw 1.5
+set style line 1 lc rgb '#000000' lt 1 lw 1.5
 set style line 2 lc rgb '#FA9D00' lt 1 lw 1.5
 set style line 3 lc rgb '#7D72F9' lt 1 lw 1.5
 set style line 4 lc rgb '#dd181f' lt 1 lw 1.5
