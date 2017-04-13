@@ -27,13 +27,14 @@ def generate_noise_sequence(signal_scheme, noise):
     """
     return [ s + n for s, n in zip(signal_scheme, noise) ]
 
-def generate_received_sequence(noise_sequence):
-    """ generate received sequence by using optimal detection rule
+def generate_received_sequence(noise_sequence, th):
+    """ generate received sequence by comparing with threshhold 
 
     Args:
         noise_sequence: An array represent the noise sequence
+        th: A number represents the threshhold
     """
-    return [ 1 if n > 0 else 0 for n in noise_sequence ]
+    return [ 1 if n > th else 0 for n in noise_sequence ]
 
 def get_bit_error_rate(sent_sequence, received_sequence, size):
     """ calculate bit error rate in the normal way
@@ -73,7 +74,7 @@ def initialize_scheme(sent_sequence):
     signal_scheme = [ (b - 1) if b == 0 else b for b in sent_sequence]
     return signal_scheme
 
-def main(snrs, bit_rate, size=1000000, mean=0):
+def main(snrs, bit_rate, th, size=1000000, mean=0):
     bers=[]
     bers2=[]
     # sent
@@ -84,7 +85,7 @@ def main(snrs, bit_rate, size=1000000, mean=0):
         noise = generate_noise_array(mean, snr, size)
         noise_sequence = generate_noise_sequence(signal_scheme, noise) 
         # receive
-        received_sequence = generate_received_sequence(noise_sequence)
+        received_sequence = generate_received_sequence(noise_sequence, th)
         ber = get_bit_error_rate(sent_sequence, received_sequence, size)
         bers.append(ber)
         q = (1/2) * special.erfc((2 * snr)**(1/2) / (2**(1/2)))
@@ -95,7 +96,7 @@ if __name__ == "__main__":
     # simulate channel under 0.5 bit rate
     print ("Simulating channel under 0.5 bit rate...")
     snrs = [3, 4, 5, 7,  9, 11]
-    snrs, bers, bers2 = main(snrs, 0.5)
+    snrs, bers, bers2 = main(snrs, 0.5, 0)
     results = zip(snrs, bers, bers2)
     f = open("data_0_5.dat", "w")
     for r in results:
@@ -103,15 +104,37 @@ if __name__ == "__main__":
         f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
     f.close()
     print ("Output: data_0_5.dat")
-    # simulate error rate under 0.01/0.99 bit rate
-    print ("Simulating channel under 0.01 bit rate...")
-    snrs, bers, bers2 = main(snrs, 0.01)
+    # simulate error rate under 0.01/0.99 bit rate for th=0
+    print ("Simulating channel under 0.01 bit rate with threshhold 0...")
+    snrs, bers, bers2 = main(snrs, 0.01, 0)
     results = zip(snrs, bers, bers2)
-    f = open("data_0_01.dat", "w")
+    f = open("data_0_01_th0.dat", "w")
     for r in results:
         print (str(r[0]) + " " + str(r[1]))
         f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
     f.close()
-    print ("Output: data_0_01.dat")
+    print ("Output: data_0_01_th0.dat")
+
+    # simulate error rate under 0.01/0.99 bit rate for th=0.3
+    print ("Simulating channel under 0.01 bit rate with threshhold -0.2...")
+    snrs, bers, bers2 = main(snrs, 0.01, -0.2)
+    results = zip(snrs, bers, bers2)
+    f = open("data_0_01_th0_3.dat", "w")
+    for r in results:
+        print (str(r[0]) + " " + str(r[1]))
+        f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
+    f.close()
+    print ("Output: data_0_01_th0_3.dat")
+
+    # simulate error rate under 0.01/0.99 bit rate for th=0.7
+    print ("Simulating channel under 0.01 bit rate with threshhold 0.2...")
+    snrs, bers, bers2 = main(snrs, 0.01, 0.2)
+    results = zip(snrs, bers, bers2)
+    f = open("data_0_01_th0_7.dat", "w")
+    for r in results:
+        print (str(r[0]) + " " + str(r[1]))
+        f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
+    f.close()
+    print ("Output: data_0_01_th0_7.dat")
     print ("Simulation done.")
 
