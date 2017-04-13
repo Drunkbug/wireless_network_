@@ -1,0 +1,14 @@
+the script simulates the noise environment under AWGN channel, and calculates BER under
+different bit rate, SNR and threshhold
+
+Set up running environment:
+    1. Install Python3
+    2. Install scipy library:
+        sudo pip3 install scipy
+    3. Install numpy library:
+        sudo pip3 install numpy
+How to run the script:
+    1. execute run.py(approximately 1 - 5 minutes running time):
+        python3 run.py
+    2. plot output:
+        gnuplot plot.gnu
