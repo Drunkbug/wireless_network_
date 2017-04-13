@@ -4,7 +4,6 @@ from random import randint
 from scipy import special
 import numpy
 
-#TODO in readme: pip3 install numpy, pip3 install scipy, use python 3
 
 def generate_noise_array(mean, snr, size):
     """ generate noise array based on gaussian noise form 
