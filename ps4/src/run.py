@@ -119,22 +119,22 @@ if __name__ == "__main__":
     print ("Simulating channel under 0.01 bit rate with threshhold -0.2...")
     snrs, bers, bers2 = main(snrs, 0.01, -0.2)
     results = zip(snrs, bers, bers2)
-    f = open("data_0_01_th0_3.dat", "w")
+    f = open("data_0_01_thn0_2.dat", "w")
     for r in results:
         print (str(r[0]) + " " + str(r[1]))
         f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
     f.close()
-    print ("Output: data_0_01_th0_3.dat")
+    print ("Output: data_0_01_thn0_2.dat")
 
     # simulate error rate under 0.01/0.99 bit rate for th=0.7
     print ("Simulating channel under 0.01 bit rate with threshhold 0.2...")
     snrs, bers, bers2 = main(snrs, 0.01, 0.2)
     results = zip(snrs, bers, bers2)
-    f = open("data_0_01_th0_7.dat", "w")
+    f = open("data_0_01_th0_2.dat", "w")
     for r in results:
         print (str(r[0]) + " " + str(r[1]))
         f.write(str(r[0]) + " " + str('{:f}'.format(r[1])) + " " + str('{:f}'.format(r[2])) + "\n")
     f.close()
-    print ("Output: data_0_01_th0_7.dat")
+    print ("Output: data_0_01_th0_2.dat")
     print ("Simulation done.")
 
